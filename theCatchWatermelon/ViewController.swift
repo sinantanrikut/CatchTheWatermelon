@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     var counter = 0
     var waterMelonArray = [UIImageView]()
     var hideTimer = Timer()
-    
+    var highScore = 0
     
     
     @IBOutlet weak var timeLabel: UILabel!
@@ -42,6 +42,17 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         scoreLabel.text = "Score: \(score)"
         
+        //Highscore kontrol
+        let storedHighScore = UserDefaults.standard.object(forKey: "highscore")
+        
+        if storedHighScore == nil {
+            highScore = 0
+            highScooreLbl.text = "High Score: \(highScore)"
+        }
+        if let newScore = storedHighScore as? Int{
+            highScore = newScore
+            highScooreLbl.text = "High Score: \(highScore)"
+        }
         
         
         //Images
@@ -98,6 +109,8 @@ class ViewController: UIViewController {
             melon.isHidden = true
         }
         
+        
+        // random sayı
        let random = Int( arc4random_uniform(UInt32(waterMelonArray.count - 1)))
         waterMelonArray[random].isHidden = false
         
@@ -120,6 +133,17 @@ class ViewController: UIViewController {
             for melon in waterMelonArray {
                 melon.isHidden = true
             }
+            
+            //High Score
+            
+            if self.score > self.highScore {
+                self.highScore = self.score
+                highScooreLbl.text = "High Score: \(self.highScore)"
+                UserDefaults.standard.set(self.highScore, forKey: "highscore")
+            }
+            
+            
+            
             //Alert
             let alert = UIAlertController(title: "Time's Up", message: "Do you want to again", preferredStyle: UIAlertController.Style.alert)
             let okButton = UIAlertAction(title: "Okey", style: UIAlertAction.Style.cancel, handler: nil)
